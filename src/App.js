@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Navigation } from "./components/Navigation";
-import { PokemonCard } from "./components/PokemonCard";
+import { PokemonDetails } from "./routes/PokemonDetails";
+import { Home } from "./routes/Home";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
@@ -9,8 +11,9 @@ import Row from "react-bootstrap/Row";
 
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
+import { PokemonDetails } from "./routes/PokemonDetails";
 
-const LIMIT = 15;
+const LIMIT = 150;
 const pokeApi = `https://pokeapi.co/api/v2/pokemon/?limit=${LIMIT}`;
 
 function App() {
@@ -26,35 +29,17 @@ function App() {
   }, []);
 
   return (
-    <div data-testid="app">
-      <Navigation />
+    <BrowserRouter>
+      <div data-testid="app">
+        <Navigation />
 
-      <Container>
-        <br></br>
+        <Routes>
+          <Route path="/" element={<Home pokemonList={pokemonList}></Home>}></Route>
+          <Route path="/:name" element={<PokemonDetails></PokemonDetails>}></Route>
+        </Routes>
 
-        <Container style={{width: 450}}>
-          <InputGroup className="mb-3">
-            <InputGroup.Text id="basic-addon1">Search</InputGroup.Text>
-            <Form.Control onChange={(e) => setSearchQuery(e.target.value)} />
-          </InputGroup>
-        </Container>
-
-        <br></br>
-
-        <Container fluid>
-          <Row>
-            {pokemonList.filter((pokemon) => pokemon.name.includes(searchQuery)).map((pokemon) => (
-              <Col md={3} key={pokemon.name} style={{ "marginBottom": "25px" }}>
-                <PokemonCard
-                  name={pokemon.name}
-                  url={pokemon.url}
-                />
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </Container>
-    </div>
+      </div>
+    </BrowserRouter>
   );
 }
 
